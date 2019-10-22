@@ -1,4 +1,4 @@
-9.5. Other Forms of Single-threaded Subsystems
+## 9.5. Other Forms of Single-threaded Subsystems
 
 Thread confinement is not restricted to GUIs: it can be used whenever a facility is implemented as a single-threaded subsystem. Sometimes thread confinement is forced on the developer for reasons that have nothing to do with avoiding synchronization or deadlock. For example, some native libraries require that all access to the library, even loading the library with System.loadLibrary, bemade from the same thread.
 

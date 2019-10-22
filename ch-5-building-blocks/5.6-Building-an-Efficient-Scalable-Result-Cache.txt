@@ -1,4 +1,4 @@
-5.6. Building an Efficient, Scalable Result Cache
+## 5.6. Building an Efficient, Scalable Result Cache
 
 Nearly every server application uses some form of caching. Reusing the results of a previous computation can reduce latency and increase throughput, at the cost of some additional memory usage.
 

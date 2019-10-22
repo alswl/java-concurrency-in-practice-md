@@ -1,4 +1,4 @@
-2.5. Liveness and Performance
+## 2.5. Liveness and Performance
 
 In UnsafeCachingFactorizer, we introduced some caching into our factoring servlet in the hope of improving performance. Caching required some shared state, which in turn required synchronization to maintain the integrity of that state. But the way we used synchronization in SynchronizedFactorizer makes it perform badly. The synchronization policy for SynchronizedFactorizer is to guard each state variable with the servlet object¡¯s intrinsic lock, and that policy was implemented by synchronizing the entirety of the service method. This simple, coarse-grained approach restored safety, but at a high price.
 

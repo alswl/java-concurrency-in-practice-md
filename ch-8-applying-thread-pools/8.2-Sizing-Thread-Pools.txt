@@ -1,4 +1,4 @@
-8.2. Sizing Thread Pools
+## 8.2. Sizing Thread Pools
 
 The ideal size for a thread pool depends on the types of tasks that will be submitted and the characteristics of the deployment system. Thread pool sizes should rarely be hard-coded; instead pool sizes should be provided by a configuration mechanism or computed dynamically by consulting Runtime.availableProcessors.
 

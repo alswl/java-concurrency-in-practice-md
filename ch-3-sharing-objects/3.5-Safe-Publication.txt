@@ -1,4 +1,4 @@
-3.5. Safe Publication
+## 3.5. Safe Publication
 
 So far we have focused on ensuring that an object not be published, such as when it is supposed to be confined to a thread or within another object. Of course, sometimes we do want to share objects across threads, and in this case we must do so safely. Unfortunately, simply storing a reference to an object into a public field, as in Listing 3.14, is not enough to publish that object safely.
 
@@ -32,7 +32,7 @@ public void initialize() {
 
 You may be surprised at how badly this harmless-looking example could fail. Because of visibility problems, the Holder could appear to another thread to be in an inconsistent state, even though its invariants were properly established by its constructor! This improper publication could allow another thread to observe a partially constructed object.
 
-3.5.1. Improper Publication: When Good Objects Go Bad
+### 3.5.1. Improper Publication: When Good Objects Go Bad
 
 You cannot rely on the integrity of partially constructed objects. An observing thread could see the object in an inconsistent state, and then later see its state suddenly change, even though it has not been modified since publication. In fact, if the Holder in Listing 3.15 is published using the unsafe publication idiom in Listing 3.14, and a thread other than the publishing thread were to call assertSanity, it could throw AssertionError![15]
 
@@ -58,7 +58,7 @@ Because synchronization was not used to make the Holder visible to other threads
 
 At the risk of repeating ourselves, some very strange things can happen when data is shared across threads without sufficient synchronization.
 
-3.5.2. Immutable Objects and Initialization Safety
+### 3.5.2. Immutable Objects and Initialization Safety
 
 Because immutable objects are so important, the JavaMemory Model offers a special guarantee of initialization safety for sharing immutable objects. As we¡¯ve seen, that an object reference becomes visible to another thread does not necessarily mean that the state of that object is visible to the consuming thread. In order to guarantee a consistent view of the object¡¯s state, synchronization is needed.
 
@@ -69,7 +69,7 @@ Immutable objects can be used safely by any thread without additional synchroniz
 
 This guarantee extends to the values of all final fields of properly constructed objects; final fields can be safely accessed without additional synchronization. However, if final fields refer to mutable objects, synchronization is still required to access the state of the objects they refer to.
 
-3.5.3. Safe Publication Idioms
+### 3.5.3. Safe Publication Idioms
 
 Objects that are not immutable must be safely published, which usually entails synchronization by both the publishing and the consuming thread. For the moment, let¡¯s focus on ensuring that the consuming thread can see the object in its aspublished state; we¡¯ll deal with visibility of modifications made after publication soon.
 
@@ -100,7 +100,7 @@ public static Holder holder = new Holder(42);
 
 Static initializers are executed by the JVM at class initialization time; because of internal synchronization in the JVM, this mechanism is guaranteed to safely publish any objects initialized in this way [JLS 12.4.2].
 
-3.5.4. Effectively Immutable Objects
+### 3.5.4. Effectively Immutable Objects
 
 Safe publication is sufficient for other threads to safely access objects that are not going to be modified after publication without additional synchronization. The safe publication mechanisms all guarantee that the as-published state of an object is visible to all accessing threads as soon as the reference to it is visible, and if that state is not going to be changed again, this is sufficient to ensure that any access is safe.
 
@@ -118,7 +118,7 @@ public Map<String, Date> lastLogin =
 
 If the Date values are not modified after they are placed in the Map, then the synchronization in the synchronizedMap implementation is sufficient to publish the Date values safely, and no additional synchronization is needed when accessing them.
 
-3.5.5. Mutable Objects
+### 3.5.5. Mutable Objects
 
 If an object may be modified after construction, safe publication ensures only the visibility of the as-published state. Synchronization must be used not only to publish a mutable object, but also every time the object is accessed to ensure visibility of subsequent modifications. To share mutable objects safely, they must be safely published and be either thread-safe or guarded by a lock.
 
@@ -131,7 +131,7 @@ Effectively immutable objects must be safely published;
 Mutable objects must be safely published, and must be either threadsafe or guarded by a lock.
 
 
-3.5.6. Sharing Objects Safely
+### 3.5.6. Sharing Objects Safely
 
 Whenever you acquire a reference to an object, you should know what you are allowed to do with it. Do you need to acquire a lock before using it? Are you allowed to modify its state, or only to read it? Many concurrency errors stem from failing to understand these ¡°rules of engagement¡± for a shared object. When you publish an object, you should document how the object can be accessed.
 

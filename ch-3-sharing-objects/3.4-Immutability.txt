@@ -1,4 +1,4 @@
-3.4. Immutability
+## 3.4. Immutability
 
 The other end-run around the need to synchronize is to use immutable objects [EJ Item 13]. Nearly all the atomicity and visibility hazards we¡¯ve described so far, such as seeing stale values, losing updates, or observing an object to be in an inconsistent state, have to do with the vagaries of multiple threads trying to access the same mutable state at the same time. If an object¡¯s state cannot be modified, these risks and complexities simply go away.
 
@@ -47,7 +47,7 @@ Because program state changes all the time, you might be tempted to think that i
 
 [13] Many developers fear that this approach will create performance problems, but these fears are usually unwarranted. Allocation is cheaper than you might think, and immutable objects offer additional performance advantages such as reduced need for locking or defensive copies and reduced impact on generational garbage collection.
 
-3.4.1. Final Fields
+### 3.4.1. Final Fields
 
 The final keyword, a more limited version of the const mechanism from C++, supports the construction of immutable objects. Final fields can¡¯t be modified (although the objects they refer to can be modified if they are mutable), but they also have special semantics under the Java Memory Model. It is the use of final fields that makes possible the guarantee of initialization safety (see Section 3.5.2) that lets immutable objects be freely accessed and shared without synchronization.
 
@@ -56,7 +56,7 @@ Even if an object is mutable, making some fields final can still simplify reason
 Just as it is a good practice to make all fields private unless they need greater visibility [EJ Item 12], it is a good practice to make all fields final unless they need to be mutable.
 
 
-3.4.2. Example: Using Volatile to Publish Immutable Objects
+### 3.4.2. Example: Using Volatile to Publish Immutable Objects
 
 In UnsafeCachingFactorizer on page 24,we tried to use two AtomicReferences to store the last number and last factors, but this was not thread-safe because we could not fetch or update the two related values atomically. Using volatile variables for these values would not be thread-safe for the same reason. However, immutable objects can sometimes provide a weak form of atomicity.
 

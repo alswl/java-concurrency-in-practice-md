@@ -1,4 +1,4 @@
-5.2. Concurrent Collections
+## 5.2. Concurrent Collections
 
 Java 5.0 improves on the synchronized collections by providing several concurrent collection classes. Synchronized collections achieve their thread safety by serializing all access to the collection¡¯s state. The cost of this approach is poor concurrency; when multiple threads contend for the collection-wide lock, throughput suffers.
 
@@ -13,7 +13,7 @@ BlockingQueue extends Queue to add blocking insertion and retrieval operations. 
 
 Just as ConcurrentHashMap is a concurrent replacement for a synchronized hash-based Map, Java 6 adds ConcurrentSkipListMap and ConcurrentSkipListSet, which are concurrent replacements for a synchronized SortedMap or SortedSet (such as TreeMap or TreeSet wrapped with synchronizedMap).
 
-5.2.1. ConcurrentHashMap
+### 5.2.1. ConcurrentHashMap
 
 The synchronized collections classes hold a lock for the duration of each operation. Some operations, such as HashMap.get or List.contains, may involve more work than is initially obvious: traversing a hash bucket or list to find a specific object entails calling equals (which itself may involve a fair amount of computation) on a number of candidate objects. In a hash-based collection, if hashCode does not spread out hash values well, elements may be unevenly distributed among buckets; in the degenerate case, a poor hash function will turn a hash table into a linked list. Traversing a long list and calling equals on some or all of the elements can take a long time, and during that time no other thread can access the collection.
 
@@ -29,11 +29,11 @@ Because it has so many advantages and so few disadvantages compared to Hashtable
 
 [3] Or if you are relying on the synchronization side effects of the synchronized Map implementations.
 
-5.2.2. Additional Atomic Map Operations
+### 5.2.2. Additional Atomic Map Operations
 
 Since a ConcurrentHashMap cannot be locked for exclusive access, we cannot use client-side locking to create new atomic operations such as put-if-absent, as we did for Vector in Section 4.4.1. Instead, a number of common compound operations such as put-if-absent, remove-if-equal, and replace-if-equal are implemented as atomic operations and specified by the ConcurrentMap interface, shown in Listing 5.7. If you find yourself adding such functionality to an existing synchronized Map implementation, it is probably a sign that you should consider using a ConcurrentMap instead.
 
-5.2.3. CopyOnWriteArrayList
+### 5.2.3. CopyOnWriteArrayList
 
 CopyOnWriteArrayList is a concurrent replacement for a synchronized List that offers better concurrency in some common situations and eliminates the need to lock or copy the collection during iteration. (Similarly, CopyOnWriteArraySet is a concurrent replacement for a synchronized Set.)
 

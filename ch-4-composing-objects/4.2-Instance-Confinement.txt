@@ -1,4 +1,4 @@
-4.2. Instance Confinement
+## 4.2. Instance Confinement
 
 If an object is not thread-safe, several techniques can still let it be used safely in a multithreaded program. You can ensure that it is only accessed from a single thread (thread confinement), or that all access to it is properly guarded by a lock.
 
@@ -38,7 +38,7 @@ Of course, it is still possible to violate confinement by publishing a supposedl
 Confinement makes it easier to build thread-safe classes because a class that confines its state can be analyzed for thread safety without having to examine the whole program.
 
 
-4.2.1. The Java Monitor Pattern
+### 4.2.1. The Java Monitor Pattern
 
 Following the principle of instance confinement to its logical conclusion leads you to the Java monitor pattern.[2] An object following the Java monitor pattern encapsulates all its mutable state and guards it with the object¡¯s own intrinsic lock.
 
@@ -65,7 +65,7 @@ public class PrivateLock {
 
 There are advantages to using a private lock object instead of an object¡¯s intrinsic lock (or any other publicly accessible lock). Making the lock object private encapsulates the lock so that client code cannot acquire it, whereas a publicly accessible lock allows client code to participate in its synchronization policy¡ªcorrectly or incorrectly. Clients that improperly acquire another object¡¯s lock could cause liveness problems, and verifying that a publicly accessible lock is properly used requires examining the entire program rather than a single class.
 
-4.2.2. Example: Tracking Fleet Vehicles
+### 4.2.2. Example: Tracking Fleet Vehicles
 
 Counter in Listing 4.1 is a concise, but trivial, example of the Java monitor pattern. Let¡¯s build a slightly less trivial example: a ¡°vehicle tracker¡± for dispatching fleet vehicles such as taxicabs, police cars, or delivery trucks. We¡¯ll build it first using the monitor pattern, and then see how to relax some of the encapsulation requirements while retaining thread safety.
 

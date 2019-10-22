@@ -1,4 +1,4 @@
-4.5. Documenting Synchronization Policies
+## 4.5. Documenting Synchronization Policies
 
 Documentation is one of the most powerful (and, sadly, most underutilized) tools for managing thread safety. Users look to the documentation to find out if a class is thread-safe, and maintainers look to the documentation to understand the implementation strategy so they can maintain it without inadvertently compromising safety. Unfortunately, both of these constituencies usually find less information in the documentation than they¡¯d like.
 
@@ -21,7 +21,7 @@ To make matters worse, our intuition may often be wrong on which classes are ¡°p
 
 The problem with SimpleDateFormat could be avoided by not assuming a class is thread-safe if it doesn¡¯t say so. On the other hand, it is impossible to develop a servlet-based application without making some pretty questionable assumptions about the thread safety of container-provided objects like HttpSession. Don¡¯t make your customers or colleagues have to make guesses like this.
 
-4.5.1. Interpreting Vague Documentation
+### 4.5.1. Interpreting Vague Documentation
 
 Many Java technology specifications are silent, or at least unforthcoming, about thread safety guarantees and requirements for interfaces such as ServletContext, HttpSession, or DataSource.[9] Since these interfaces are implemented by your container or database vendor, you often can¡¯t look at the code to see what it does. Besides, you don¡¯t want to rely on the implementation details of one particular JDBC driver¡ªyou want to be compliant with the standard so your code works properly with any JDBC driver. But the words ¡°thread¡± and ¡°concurrent¡± do not appear at all in the JDBC specification, and appear frustratingly rarely in the servlet specification. So what do you do?
 

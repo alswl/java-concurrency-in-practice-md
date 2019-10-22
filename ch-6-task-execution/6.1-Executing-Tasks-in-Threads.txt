@@ -8,10 +8,11 @@ Applying Thread Pools
 
 GUI Applications
 
-Chapter 6. Task Execution
+# Chapter 6. Task Execution
+
 Most concurrent applications are organized around the execution of tasks: abstract, discrete units of work. Dividing the work of an application into tasks simplifies program organization, facilitates error recovery by providing natural transaction boundaries, and promotes concurrency by providing a natural structure for parallelizing work.
 
-6.1. Executing Tasks in Threads
+## 6.1. Executing Tasks in Threads
 
 The first step in organizing a program around task execution is identifying sensible task boundaries. Ideally, tasks are independent activities: work that doesn¡¯t depend on the state, result, or side effects of other tasks. Independence facilitates concurrency, as independent tasks can be executed in parallel if there are adequate processing resources. For greater flexibility in scheduling and load balancing tasks, each task should also represent a small fraction of your application¡¯s processing capacity.
 
@@ -19,7 +20,7 @@ Server applications should exhibit both good throughput and good responsiveness 
 
 Most server applications offer a natural choice of task boundary: individual client requests. Web servers, mail servers, file servers, EJB containers, and database servers all accept requests via network connections from remote clients. Using individual requests as task boundaries usually offers both independence and appropriate task sizing. For example, the result of submitting a message to a mail server is not affected by the other messages being processed at the same time, and handling a single message usually requires a very small percentage of the server¡¯s total capacity.
 
-6.1.1. Executing Tasks Sequentially
+### 6.1.1. Executing Tasks Sequentially
 
 There are a number of possible policies for scheduling tasks within an application, some of which exploit the potential for concurrency better than others. The simplest is to execute tasks sequentially in a single thread. SingleThreadWeb-Server in Listing 6.1 processes its tasks¡ªHTTP requests arriving on port 80¡ªsequentially. The details of the request processing aren¡¯t important; we¡¯re interested in characterizing the concurrency of various scheduling policies.
 
@@ -44,7 +45,7 @@ In server applications, sequential processing rarely provides either good throug
 
 [1] In some situations, sequential processing may offer a simplicity or safety advantage; most GUI frameworks process tasks sequentially using a single thread. We return to the sequential model in Chapter 9.
 
-6.1.2. Explicitly Creating Threads for Tasks
+### 6.1.2. Explicitly Creating Threads for Tasks
 
 A more responsive approach is to create a new thread for servicing each request, as shown in ThreadPerTaskWebServer in Listing 6.2.
 
@@ -76,7 +77,7 @@ Task-handling code must be thread-safe, because it may be invoked concurrently f
 
 Under light to moderate load, the thread-per-task approach is an improvement over sequential execution. As long as the request arrival rate does not exceed the server¡¯s capacity to handle requests, this approach offers better responsiveness and throughput.
 
-6.1.3. Disadvantages of Unbounded Thread Creation
+### 6.1.3. Disadvantages of Unbounded Thread Creation
 
 For production use, however, the thread-per-task approach has some practical drawbacks, especially when a large number of threads may be created:
 

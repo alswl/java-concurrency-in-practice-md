@@ -1,4 +1,4 @@
-1.4. Threads are Everywhere
+## 1.4. Threads are Everywhere
 
 Even if your program never explicitly creates a thread, frameworks may create threads on your behalf, and code called from these threads must be thread-safe. This can place a significant design and implementation burden on developers, since developing thread-safe classes requires more care and analysis than developing non-thread-safe classes.
 

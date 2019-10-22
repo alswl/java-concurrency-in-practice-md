@@ -1,4 +1,4 @@
-4.4. Adding Functionality to Existing Thread-safe Classes
+## 4.4. Adding Functionality to Existing Thread-safe Classes
 
 The Java class library contains many useful ¡°building block¡± classes. Reusing existing classes is often preferable to creating new ones: reuse can reduce development effort, development risk (because the existing components are already tested), and maintenance cost. Sometimes a thread-safe class that supports all of the operations we want already exists, but often the best we can find is a class that supports almost all the operations we want, and then we need to add a new operation to it without undermining its thread safety.
 
@@ -24,7 +24,7 @@ public class BetterVector<E> extends Vector<E> {
     }
 }
 
-4.4.1. Client-side Locking
+### 4.4.1. Client-side Locking
 
 For an ArrayList wrapped with a Collections.synchronizedList wrapper, neither of these approaches¡ªadding a method to the original class or extending the class¡ªworks because the client code does not even know the class of the List object returned from the synchronized wrapper factories. A third strategy is to extend the functionality of the class without extending the class itself by placing extension code in a ¡°helper¡± class.
 
@@ -73,7 +73,7 @@ If extending a class to add another atomic operation is fragile because it distr
 
 Client-side locking has a lot in common with class extension¡ªthey both couple the behavior of the derived class to the implementation of the base class. Just as extension violates encapsulation of implementation [EJ Item 14], client-side locking violates encapsulation of synchronization policy.
 
-4.4.2. Composition
+### 4.4.2. Composition
 
 There is a less fragile alternative for adding an atomic operation to an existing class: composition. ImprovedList in Listing 4.16 implements the List operations by delegating them to an underlying List instance, and adds an atomic putIfAbsent method. (Like Collections.synchronizedList and other collections wrappers, ImprovedList assumes that once a list is passed to its constructor, the client will not use the underlying list directly again, accessing it only through the ImprovedList.)
 

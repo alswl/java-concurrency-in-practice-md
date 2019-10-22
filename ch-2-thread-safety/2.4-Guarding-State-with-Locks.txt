@@ -1,4 +1,4 @@
-2.4. Guarding State with Locks
+## 2.4. Guarding State with Locks
 
 Because locks enable serialized [8] access to the code paths they guard, we can use them to construct protocols for guaranteeing exclusive access to shared state. Following these protocols consistently can ensure state consistency.
 

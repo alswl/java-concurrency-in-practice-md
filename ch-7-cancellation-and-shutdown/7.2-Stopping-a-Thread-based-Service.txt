@@ -1,4 +1,4 @@
-7.2. Stopping a Thread-based Service
+## 7.2. Stopping a Thread-based Service
 
 Applications commonly create services that own threads, such as thread pools, and the lifetime of these services is usually longer than that of the method that creates them. If the application is to shut down gracefully, the threads owned by these services need to be terminated. Since there is no preemptive way to stop a thread, they must instead be persuaded to shut down on their own.
 
@@ -9,7 +9,7 @@ As with any other encapsulated object, thread ownership is not transitive: the a
 Provide lifecycle methods whenever a thread-owning service has a lifetime longer than that of the method that created it.
 
 
-7.2.1. Example: A Logging Service
+### 7.2.1. Example: A Logging Service
 
 Most server applications use logging, which can be as simple as inserting println statements into the code. Stream classes like PrintWriter are thread-safe, so this simple approach would require no explicit synchronization.[3] However, as we¡¯ll see in Section 11.6, inline logging can have some performance costs in highvolume applications. Another alternative is have the log call queue the log message for processing by another thread.
 
@@ -120,7 +120,7 @@ public void log(String msg) throws InterruptedException {
 
 The way to provide reliable shutdown for LogWriter is to fix the race condition, which means making the submission of a new log message atomic. But we don¡¯t want to hold a lock while trying to enqueue the message, since put could block. Instead, we can atomically check for shutdown and conditionally increment a counter to ¡°reserve¡± the right to submit a message, as shown in LogService in Listing 7.15.
 
-7.2.2. ExecutorService Shutdown
+### 7.2.2. ExecutorService Shutdown
 
 In Section 6.2.4, we saw that ExecutorService offers two ways to shut down: graceful shutdown with shutdown, and abrupt shutdown with shutdownNow. In an abrupt shutdown, shutdownNow returns the list of tasks that had not yet started after attempting to cancel all actively executing tasks.
 
@@ -202,7 +202,7 @@ public class LogService {
     }
 }
 
-7.2.3. Poison Pills
+### 7.2.3. Poison Pills
 
 Another way to convince a producer-consumer service to shut down is with a poison pill: a recognizable object placed on the queue that means ¡°when you get this, stop.¡± With a FIFO queue, poison pills ensure that consumers finish the work on their queue before shutting down, since any work submitted prior to submitting the poison pill will be retrieved before the pill; producers should not submit any work after putting a poison pill on the queue. IndexingService in Listings 7.17, 7.18, and 7.19 shows a single-producer, single-consumer version of the desktop search example from Listing 5.8 on page 91 that uses a poison pill to shut down the service.
 
@@ -233,7 +233,7 @@ public class IndexingService {
 
 Poison pills work only when the number of producers and consumers is known. The approach in IndexingService can be extended tomultiple producers by having each producer place a pill on the queue and having the consumer stop only when it receives Nproducers pills. It can be extended to multiple consumers by having each producer place Nconsumers pills on the queue, though this can get unwieldy with large numbers of producers and consumers. Poison pills work reliably only with unbounded queues.
 
-7.2.4. Example: A One-shot Execution Service
+### 7.2.4. Example: A One-shot Execution Service
 
 If a method needs to process a batch of tasks and does not return until all the tasks are finished, it can simplify service lifecycle management by using a private Executor whose lifetime is bounded by that method. (The invokeAll and invokeAny methods can often be useful in such situations.)
 
@@ -300,7 +300,7 @@ boolean checkMail(Set<String> hosts, long timeout, TimeUnit unit)
     return hasNewMail.get();
 }
 
-7.2.5. Limitations of Shutdownnow
+### 7.2.5. Limitations of Shutdownnow
 
 When an ExecutorService is shut down abruptly with shutdownNow, it attempts to cancel the tasks currently in progress and returns a list of tasks that were submitted but never started so that they can be logged or saved for later processing.[5]
 

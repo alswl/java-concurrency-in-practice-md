@@ -1,4 +1,4 @@
-5.3. Blocking Queues and the Producer-consumer Pattern
+## 5.3. Blocking Queues and the Producer-consumer Pattern
 
 Blocking queues provide blocking put and take methods as well as the timed equivalents offer and poll. If the queue is full, put blocks until space becomes available; if the queue is empty, take blocks until an element is available. Queues can be bounded or unbounded; unbounded queues are never full, so a put on an unbounded queue never blocks.
 
@@ -25,7 +25,7 @@ The class library contains several implementations of BlockingQueue. LinkedBlock
 
 The last BlockingQueue implementation, SynchronousQueue, is not really a queue at all, in that it maintains no storage space for queued elements. Instead, it maintains a list of queued threads waiting to enqueue or dequeue an element. In the dish-washing analogy, this would be like having no dish rack, but instead handing the washed dishes directly to the next available dryer. While this may seem a strange way to implement a queue, it reduces the latency associated with moving data from producer to consumer because the work can be handed off directly. (In a traditional queue, the enqueue and dequeue operations must complete sequentially before a unit of work can be handed off.) The direct handoff also feeds back more information about the state of the task to the producer; when the handoff is accepted, it knows a consumer has taken responsibility for it, rather than simply letting it sit on a queue somewhere¡ªmuch like the difference between handing a document to a colleague and merely putting it in her mailbox and hoping she gets it soon. Since a SynchronousQueue has no storage capacity, put and take will block unless another thread is already waiting to participate in the handoff. Synchronous queues are generally suitable only when there are enough consumers that there nearly always will be one ready to take the handoff.
 
-5.3.1. Example: Desktop Search
+### 5.3.1. Example: Desktop Search
 
 One type of program that is amenable to decomposition into producers and consumers is an agent that scans local drives for documents and indexes them for later searching, similar to Google Desktop or the Windows Indexing service. DiskCrawler in Listing 5.8 shows a producer task that searches a file hierarchy for files meeting an indexing criterion and puts their names on the work queue; Indexer in Listing 5.8 shows the consumer task that takes file names from the queue and indexes them.
 
@@ -35,7 +35,7 @@ The producer-consumer pattern also enables several performance benefits. Produce
 
 Listing 5.9 starts several crawlers and indexers, each in their own thread. As written, the consumer threads never exit, which prevents the program from terminating; we examine several techniques for addressing this problem in Chapter 7. While this example uses explicitly managed threads, many producer-consumer designs can be expressed using the Executor task execution framework, which itself uses the producer-consumer pattern.
 
-5.3.2. Serial Thread Confinement
+### 5.3.2. Serial Thread Confinement
 
 The blocking queue implementations in java.util.concurrent all contain sufficient internal synchronization to safely publish objects from a producer thread to the consumer thread.
 
@@ -108,7 +108,7 @@ public static void startIndexing(File[] roots) {
         new Thread(new Indexer(queue)).start();
 }
 
-5.3.3. Deques and Work Stealing
+### 5.3.3. Deques and Work Stealing
 
 Java 6 also adds another two collection types, Deque (pronounced ¡°deck¡±) and BlockingDeque, that extend Queue and BlockingQueue. A Deque is a doubleended queue that allows efficient insertion and removal from both the head and the tail. Implementations include ArrayDeque and LinkedBlockingDeque.
 

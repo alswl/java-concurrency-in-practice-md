@@ -1,7 +1,8 @@
-Chapter 4. Composing Objects
+# Chapter 4. Composing Objects
+
 So far, we¡¯ve covered the low-level basics of thread safety and synchronization. But we don¡¯t want to have to analyze each memory access to ensure that our program is thread-safe; we want to be able to take thread-safe components and safely compose them into larger components or programs. This chapter covers patterns for structuring classes that can make it easier to make them thread-safe and to maintain them without accidentally undermining their safety guarantees.
 
-4.1. Designing a Thread-safe Class
+## 4.1. Designing a Thread-safe Class
 
 While it is possible to write a thread-safe program that stores all its state in public static fields, it is a lot harder to verify its thread safety or to modify it so that it remains thread-safe than one that uses encapsulation appropriately. Encapsulation makes it possible to determine that a class is thread-safe without having to examine the entire program.
 
@@ -34,7 +35,7 @@ public final class Counter {
     }
 }
 
-4.1.1. Gathering Synchronization Requirements
+### 4.1.1. Gathering Synchronization Requirements
 
 Making a class thread-safe means ensuring that its invariants hold under concurrent access; this requires reasoning about its state. Objects and variables have a state space: the range of possible states they can take on. The smaller this state space, the easier it is to reason about. By using final fields wherever practical, you make it simpler to analyze the possible states an object can be in. (In the extreme case, immutable objects can only be in a single state.)
 
@@ -49,7 +50,7 @@ A class can also have invariants that constrain multiple state variables. A numb
 You cannot ensure thread safety without understanding an object¡¯s invariants and postconditions. Constraints on the valid values or state transitions for state variables can create atomicity and encapsulation requirements.
 
 
-4.1.2. State-dependent Operations
+### 4.1.2. State-dependent Operations
 
 Class invariants and method postconditions constrain the valid states and state transitions for an object. Some objects also have methods with state-based preconditions. For example, you cannot remove an item from an empty queue; a queue must be in the ¡°nonempty¡± state before you can remove an element. Operations with state-based preconditions are called state-dependent [CPJ 3].
 
@@ -57,7 +58,7 @@ In a single-threaded program, if a precondition does not hold, the operation has
 
 The built-in mechanisms for efficiently waiting for a condition to become true¡ªwait and notify¡ªare tightly bound to intrinsic locking, and can be difficult to use correctly. To create operations that wait for a precondition to become true before proceeding, it is often easier to use existing library classes, such as blocking queues or semaphores, to provide the desired state-dependent behavior. Blocking library classes such as BlockingQueue, Semaphore, and other synchronizers are covered in Chapter 5; creating state-dependent classes using the low-level mechanisms provided by the platform and class library is covered in Chapter 14.
 
-4.1.3. State Ownership
+### 4.1.3. State Ownership
 
 We implied in Section 4.1 that an object¡¯s state could be a subset of the fields in the object graph rooted at that object. Why might it be a subset? Under what conditions are fields reachable from a given object not part of that object¡¯s state?
 

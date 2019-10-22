@@ -1,4 +1,4 @@
-4.3. Delegating Thread Safety
+## 4.3. Delegating Thread Safety
 
 All but the most trivial objects are composite objects. The Java monitor pattern is useful when building classes from scratch or composing classes out of objects that are not thread-safe. But what if the components of our class are already thread-safe? Do we need to add an additional layer of thread safety? The answer is . . . ¡°it depends¡±. In some cases a composite made of thread-safe components is thread-safe (Listings 4.7 and 4.9), and in others it is merely a good start (4.10).
 
@@ -65,7 +65,7 @@ public class MutablePoint {
     }
 }
 
-4.3.1. Example: Vehicle Tracker Using Delegation
+### 4.3.1. Example: Vehicle Tracker Using Delegation
 
 As a more substantial example of delegation, let¡¯s construct a version of the vehicle tracker that delegates to a thread-safe class. We store the locations in a Map, so we start with a thread-safe Map implementation, ConcurrentHashMap. We also store the location using an immutable Point class instead of MutablePoint, shown in Listing 4.6.
 
@@ -123,7 +123,7 @@ public Map<String, Point> getLocations() {
             new HashMap<String, Point>(locations));
 }
 
-4.3.2. Independent State Variables
+### 4.3.2. Independent State Variables
 
 The delegation examples so far delegate to a single, thread-safe state variable. We can also delegate thread safety to more than one underlying state variable as long as those underlying state variables are independent, meaning that the composite class does not impose any invariants involving the multiple state variables.
 
@@ -156,7 +156,7 @@ public class VisualComponent {
 
 VisualComponent uses a CopyOnWriteArrayList to store each listener list; this is a thread-safe List implementation particularly suited for managing listener lists (see Section 5.2.3). Each List is thread-safe, and because there are no constraints coupling the state of one to the state of the other, VisualComponent can delegate its thread safety responsibilities to the underlying mouseListeners and keyListeners objects.
 
-4.3.3. When Delegation Fails
+### 4.3.3. When Delegation Fails
 
 Most composite classes are not as simple as VisualComponent: they have invariants that relate their component state variables. NumberRange in Listing 4.10 uses two AtomicIntegers to manage its state, but imposes an additional constraint¡ªthat the first number be less than or equal to the second.
 
@@ -204,7 +204,7 @@ If a class is composed of multiple independent thread-safe state variables and h
 
 The problem that prevented NumberRange from being thread-safe even though its state components were thread-safe is very similar to one of the rules about volatile variables described in Section 3.1.4: a variable is suitable for being declared volatile only if it does not participate in invariants involving other state variables.
 
-4.3.4. Publishing Underlying State Variables
+### 4.3.4. Publishing Underlying State Variables
 
 When you delegate thread safety to an object¡¯s underlying state variables, under what conditions can you publish those variables so that other classes can modify them as well? Again, the answer depends on what invariants your class imposes on those variables. While the underlying value field in Counter could take on any integer value, Counter constrains it to take on only positive values, and the increment operation constrains the set of valid next states given any current state. If you were to make the value field public, clients could change it to an invalid value, so publishing it would render the class incorrect. On the other hand, if a variable represents the current temperature or the ID of the last user to log on, then having another class modify this value at any time probably would not violate any invariants, so publishing this variable might be acceptable. (It still may not be a good idea, since publishing mutable variables constrains future development and opportunities for subclassing, but it would not necessarily render the class not thread-safe.)
 
@@ -213,7 +213,7 @@ If a state variable is thread-safe, does not participate in any invariants that 
 
 For example, it would be safe to publish mouseListeners or keyListeners in VisualComponent. Because VisualComponent does not impose any constraints on the valid states of its listener lists, these fields could be made public or otherwise published without compromising thread safety.
 
-4.3.5. Example: Vehicle Tracker that Publishes Its State
+### 4.3.5. Example: Vehicle Tracker that Publishes Its State
 
 Let¡¯s construct another version of the vehicle tracker that publishes its underlying mutable state. Again, we need to modify the interface a little bit to accommodate this change, this time using mutable but thread-safe points.
 

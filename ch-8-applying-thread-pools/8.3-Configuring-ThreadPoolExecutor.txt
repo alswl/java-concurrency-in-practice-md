@@ -1,10 +1,10 @@
-8.3. Configuring ThreadPoolExecutor
+## 8.3. Configuring ThreadPoolExecutor
 
 ThreadPoolExecutor provides the base implementation for the executors returned by the newCachedThreadPool, newFixedThreadPool, and newScheduled-ThreadExecutor factories in Executors. ThreadPoolExecutor is a flexible, robust pool implementation that allows a variety of customizations.
 
 If the default execution policy does not meet your needs, you can instantiate a ThreadPoolExecutor through its constructor and customize it as you see fit; you can consult the source code for Executors to see the execution policies for the default configurations and use them as a starting point. ThreadPoolExecutor has several constructors, the most general of which is shown in Listing 8.2.
 
-8.3.1. Thread Creation and Teardown
+### 8.3.1. Thread Creation and Teardown
 
 The core pool size, maximum pool size, and keep-alive time govern thread creation and teardown. The core size is the target size; the implementation attempts to maintain the pool at this size even when there are no tasks to execute,[2] and will not create more threads than this unless the work queue is full.[3] The maximum pool size is the upper bound on how many pool threads can be active at once. A thread that has been idle for longer than the keep-alive time becomes a candidate for reaping and can be terminated if the current pool size exceeds the core size.
 
@@ -26,7 +26,7 @@ By tuning the core pool size and keep-alive times, you can encourage the pool to
 
 The newFixedThreadPool factory sets both the core pool size and the maximum pool size to the requested pool size, creating the effect of infinite timeout; the newCachedThreadPool factory sets the maximum pool size to Integer.MAX_VALUE and the core pool size to zero with a timeout of one minute, creating the effect of an infinitely expandable thread pool that will contract again when demand decreases. Other combinations are possible using the explicit ThreadPool-Executor constructor.
 
-8.3.2. Managing Queued Tasks
+### 8.3.2. Managing Queued Tasks
 
 Bounded thread pools limit the number of tasks that can be executed concurrently. (The single-threaded executors are a notable special case: they guarantee that no tasks will execute concurrently, offering the possibility of achieving thread safety through thread confinement.)
 
@@ -55,7 +55,7 @@ Bounding either the thread pool or the work queue is suitable only when tasks ar
 
 [6] An alternative configuration for tasks that submit other tasks and wait for their results is to use a bounded thread pool, a SynchronousQueue as the work queue, and the caller-runs saturation policy.
 
-8.3.3. Saturation Policies
+### 8.3.3. Saturation Policies
 
 When a bounded work queue fills up, the saturation policy comes into play. The saturation policy for a ThreadPoolExecutor can be modified by calling setRejectedExecutionHandler. (The saturation policy is also used when a task is submitted to an Executor that has been shut down.) Several implementations of RejectedExecutionHandler are provided, each implementing a different saturation policy: AbortPolicy, CallerRunsPolicy, DiscardPolicy, and DiscardOldestPolicy.
 
@@ -76,7 +76,7 @@ executor.setRejectedExecutionHandler(
 
 There is no predefined saturation policy to make execute block when the work queue is full. However, the same effect can be accomplished by using a Semaphore to bound the task injection rate, as shown in BoundedExecutor in Listing 8.4. In such an approach, use an unbounded queue (there¡¯s no reason to bound both the queue size and the injection rate) and set the bound on the semaphore to be equal to the pool size plus the number of queued tasks you want to allow, since the semaphore is bounding the number of tasks both currently executing and awaiting execution.
 
-8.3.4. Thread Factories
+### 8.3.4. Thread Factories
 
 Whenever a thread pool needs to create a thread, it does so through a thread factory (see Listing 8.5). The default thread factory creates a new, nondaemon thread with no special configuration. Specifying a thread factory allows you to customize the configuration of pool threads. ThreadFactory has a single method, newThread, that is called whenever a thread pool needs to create a new thread.
 
@@ -143,7 +143,7 @@ The interesting customization takes place in MyAppThread, shown in Listing 8.7, 
 
 If your application takes advantage of security policies to grant permissions to particular codebases, you may want to use the privilegedThreadFactory factory method in Executors to construct your thread factory. It creates pool threads that have the same permissions, AccessControlContext, and contextClassLoader as the thread creating the privilegedThreadFactory. Otherwise, threads created by the thread pool inherit permissions from whatever client happens to be calling execute or submit at the time a new thread is needed, which could cause confusing security-related exceptions.
 
-8.3.5. Customizing ThreadPoolExecutor After Construction
+### 8.3.5. Customizing ThreadPoolExecutor After Construction
 
 Most of the options passed to the ThreadPoolExecutor constructors can also be modified after construction via setters (such as the core thread pool size, maximum thread pool size, keep-alive time, thread factory, and rejected execution handler). If the Executor is created through one of the factory methods in Executors (except newSingleThreadExecutor), you can cast the result to Thread-PoolExecutor to access the setters as in Listing 8.8.
 

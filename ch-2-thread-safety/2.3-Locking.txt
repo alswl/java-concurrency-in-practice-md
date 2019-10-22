@@ -1,4 +1,4 @@
-2.3. Locking
+## 2.3. Locking
 
 We were able to add one state variable to our servlet while maintaining thread safety by using a thread-safe object to manage the entire state of the servlet. But if we want to add more state to our servlet, can we just add more thread-safe state variables?
 
@@ -40,7 +40,7 @@ With some unlucky timing, UnsafeCachingFactorizer can violate this invariant. Us
 To preserve state consistency, update related state variables in a single atomic operation.
 
 
-2.3.1. Intrinsic Locks
+### 2.3.1. Intrinsic Locks
 
 Java provides a built-in locking mechanism for enforcing atomicity: the synchronized block. (There is also another critical aspect to locking and other synchronization mechanisms¡ªvisibility¡ªwhich is covered in Chapter 3.) A synchronized block has two parts: a reference to an object that will serve as the lock, and a block of code to be guarded by that lock. A synchronized method is a shorthand for a synchronized block that spans an entire method body, and whose lock is the object on which the method is being invoked. (Static synchronized methods use the Class object for the lock.)
 
@@ -78,7 +78,7 @@ public class SynchronizedFactorizer implements Servlet {
     }
 }
 
-2.3.2. Reentrancy
+### 2.3.2. Reentrancy
 
 When a thread requests a lock that is already held by another thread, the requesting thread blocks. But because intrinsic locks are reentrant, if a thread tries to acquire a lock that it already holds, the request succeeds. Reentrancy means that locks are acquired on a per-thread rather than per-invocation basis. [7] Reentrancy is implemented by associating with each lock an acquisition count and an owning thread. When the count is zero, the lock is considered unheld. When a thread acquires a previously unheld lock, the JVM records the owner and sets the acquisition count to one. If that same thread acquires the lock again, the count is incremented, and when the owning thread exits the synchronized block, the count is decremented. When the count reaches zero, the lock is released.
 

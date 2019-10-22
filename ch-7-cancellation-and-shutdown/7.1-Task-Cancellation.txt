@@ -1,4 +1,5 @@
-Chapter 7. Cancellation and Shutdown
+# Chapter 7. Cancellation and Shutdown
+
 It is easy to start tasks and threads. Most of the time we allow them to decide when to stop by letting them run to completion. Sometimes, however, we want to stop tasks or threads earlier than they would on their own, perhaps because the user cancelled an operation or the application needs to shut down quickly.
 
 Getting tasks and threads to stop safely, quickly, and reliably is not always easy. Java does not provide any mechanism for safely forcing a thread to stop what it is doing.[1] Instead, it provides interruption, a cooperative mechanism that lets one thread ask another to stop what it is doing.
@@ -9,7 +10,7 @@ The cooperative approach is required because we rarely want a task, thread, or s
 
 End-of-lifecycle issues can complicate the design and implementation of tasks, services, and applications, and this important element of program design is too often ignored. Dealing well with failure, shutdown, and cancellation is one of the characteristics that distinguishes a well-behaved application from one that merely works. This chapter addresses mechanisms for cancellation and interruption, and how to code tasks and services to be responsive to cancellation requests.
 
-7.1. Task Cancellation
+## 7.1. Task Cancellation
 
 An activity is cancellable if external code can move it to completion before its normal completion. There are a number of reasons why you might want to cancel an activity:
 
@@ -74,7 +75,7 @@ List<BigInteger> aSecondOfPrimes() throws InterruptedException {
 
 PrimeGenerator uses a simple cancellation policy: client code requests cancellation by calling cancel, PrimeGenerator checks for cancellation once per prime found and exits when it detects cancellation has been requested.
 
-7.1.1. Interruption
+### 7.1.1. Interruption
 
 The cancellation mechanism in PrimeGenerator will eventually cause the primeseeking task to exit, but it might take a while. If, however, a task that uses this approach calls a blocking method such as BlockingQueue.put, we could have a more serious problem¡ªthe task might never check the cancellation flag and therefore might never terminate.
 
@@ -173,7 +174,7 @@ class PrimeProducer extends Thread {
     public void cancel() { interrupt(); }
 }
 
-7.1.2. Interruption Policies
+### 7.1.2. Interruption Policies
 
 Just as tasks should have a cancellation policy, threads should have an interruption policy. An interruption policy determines how a thread interprets an interruption request¡ªwhat it does (if anything) when one is detected, what units of work are considered atomic with respect to interruption, and how quickly it reacts to interruption.
 
@@ -198,7 +199,7 @@ Because each thread has its own interruption policy, you should not interrupt a 
 
 Critics have derided the Java interruption facility because it does not provide a preemptive interruption capability and yet forces developers to handle InterruptedException. However, the ability to postpone an interruption request enables developers to craft flexible interruption policies that balance responsiveness and robustness as appropriate for the application.
 
-7.1.3. Responding to Interruption
+### 7.1.3. Responding to Interruption
 
 As mentioned in Section 5.4, when you call an interruptible blocking method such as Thread.sleep or BlockingQueue.put, there are two practical strategies for handling InterruptedException:
 
@@ -248,7 +249,7 @@ public Task getNextTask(BlockingQueue<Taskgt; queue) {
 
 For example, when a worker thread owned by a ThreadPoolExecutor detects interruption, it checks whether the pool is being shut down. If so, it performs some pool cleanup before terminating; otherwise it may create a new thread to restore the thread pool to the desired size.
 
-7.1.4. Example: Timed Run
+### 7.1.4. Example: Timed Run
 
 Many problems can take forever to solve (e.g., enumerate all the prime numbers); for others, the answer might be found reasonably quickly but also might take forever. Being able to say ¡°spend up to ten minutes looking for the answer¡± or ¡°enumerate all the answers you can in ten minutes¡± can be useful in these situations.
 
@@ -280,7 +281,7 @@ This version addresses the problems in the previous examples, but because it rel
 
 [2] This is a flaw in the Thread API, because whether or not the join completes successfully has memory visibility consequences in the Java Memory Model, but join does not return a status indicating whether it was successful.
 
-7.1.5. Cancellation Via Future
+### 7.1.5. Cancellation Via Future
 
 We¡¯ve already used an abstraction for managing the lifecycle of a task, dealing with exceptions, and facilitating cancellation¡ªFuture. Following the general principle that it is better to use existing library classes than to roll your own, let¡¯s build timedRun using Future and the task execution framework.
 
@@ -344,7 +345,7 @@ public static void timedRun(Runnable r,
 When Future.get throws InterruptedException or TimeoutException and you know that the result is no longer needed by the program, cancel the task with Future.cancel.
 
 
-7.1.6. Dealing with Non-interruptible Blocking
+### 7.1.6. Dealing with Non-interruptible Blocking
 
 Many blocking library methods respond to interruption by returning early and throwing InterruptedException, which makes it easier to build tasks that are responsive to cancellation. However, not all blocking methods or blocking mechanisms are responsive to interruption; if a thread is blocked performing synchronous socket I/O or waiting to acquire an intrinsic lock, interruption has no effect other than setting the thread¡¯s interrupted status. We can sometimes convince threads blocked in noninterruptible activities to stop by means similar to interruption, but this requires greater awareness of why the thread is blocked.
 
@@ -358,7 +359,7 @@ Lock acquisition. If a thread is blocked waiting for an intrinsic lock, there is
 
 ReaderThread in Listing 7.11 shows a technique for encapsulating nonstandard cancellation. ReaderThread manages a single socket connection, reading synchronously from the socket and passing any data received to processBuffer. To facilitate terminating a user connection or shutting down the server, ReaderThread overrides interrupt to both deliver a standard interrupt and close the underlying socket; thus interrupting a ReaderThread makes it stop what it is doing whether it is blocked in read or in an interruptible blocking method.
 
-7.1.7. Encapsulating Nonstandard Cancellation with newTaskFor
+### 7.1.7. Encapsulating Nonstandard Cancellation with newTaskFor
 
 The technique used in ReaderThread to encapsulate nonstandard cancellation can be refined using the newTaskFor hook added to ThreadPoolExecutor in Java 6. When a Callable is submitted to an ExecutorService, submit returns a Future that can be used to cancel the task. The newTaskFor hook is a factory method that creates the Future representing the task. It returns a RunnableFuture, an interface that extends both Future and Runnable (and is implemented by FutureTask).
 

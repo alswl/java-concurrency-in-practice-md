@@ -1,7 +1,8 @@
-Chapter 8. Applying Thread Pools
+# Chapter 8. Applying Thread Pools
+
 Chapter 6 introduced the task execution framework, which simplifies management of task and thread lifecycles and provides a simple and flexible means for decoupling task submission from execution policy. Chapter 7 covered some of the messy details of service lifecycle that arise from using the task execution framework in real applications. This chapter looks at advanced options for configuring and tuning thread pools, describes hazards to watch for when using the task execution framework, and offers some more advanced examples of using Executor.
 
-8.1. Implicit Couplings Between Tasks and Execution Policies
+## 8.1. Implicit Couplings Between Tasks and Execution Policies
 
 We claimed earlier that the Executor framework decouples task submission from task execution. Like many attempts at decoupling complex processes, this was a bit of an overstatement. While the Executor framework offers substantial flexibility in specifying and modifying execution policies, not all tasks are compatible with all execution policies. Types of tasks that require specific execution policies include:
 
@@ -20,7 +21,7 @@ Thread pools work best when tasks are homogeneous and independent. Mixing long-r
 Some tasks have characteristics that require or preclude a specific execution policy. Tasks that depend on other tasks require that the thread pool be large enough that tasks are never queued or rejected; tasks that exploit thread confinement require sequential execution. Document these requirements so that future maintainers do not undermine safety or liveness by substituting an incompatible execution policy.
 
 
-8.1.1. Thread Starvation Deadlock
+### 8.1.1. Thread Starvation Deadlock
 
 If tasks that depend on other tasks execute in a thread pool, they can deadlock. In a single-threaded executor, a task that submits another task to the same executor and waits for its result will always deadlock. The second task sits on the work queue until the first task completes, but the first will not complete because it is waiting for the result of the second task. The same thing can happen in larger thread pools if all threads are executing tasks that are blocked waiting for other tasks still on the work queue. This is called thread starvation deadlock, and can occur whenever a pool task initiates an unbounded blocking wait for some resource or condition that can succeed only through the action of another pool task, such as waiting for the return value or side effect of another task, unless you can guarantee that the pool is large enough.
 
@@ -49,7 +50,7 @@ public class ThreadDeadlock {
     }
 }
 
-8.1.2. Long-running Tasks
+### 8.1.2. Long-running Tasks
 
 Thread pools can have responsiveness problems if tasks can block for extended periods of time, even if deadlock is not a possibility. A thread pool can become clogged with long-running tasks, increasing the service time even for short tasks. If the pool size is too small relative to the expected steady-state number of longrunning tasks, eventually all the pool threads will be running long-running tasks and responsiveness will suffer.
 

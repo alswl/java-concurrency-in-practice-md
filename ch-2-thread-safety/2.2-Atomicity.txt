@@ -1,4 +1,4 @@
-2.2. Atomicity
+## 2.2. Atomicity
 
 What happens when we add one element of state to what was a stateless object? Suppose we want to add a ¡°hit counter¡± that measures the number of requests processed. The obvious approach is to add a long field to the servlet and increment it on each request, as shown in UnsafeCountingFactorizer in Listing 2.2.
 
@@ -28,7 +28,7 @@ You might think that having a slightly inaccurate count of hits in a web-based s
 
 [3] The approach taken by UnsafeSequence and UnsafeCountingFactorizer has other serious problems, including the possibility of stale data (Section 3.1.1).
 
-2.2.1. Race Conditions
+### 2.2.1. Race Conditions
 
 UnsafeCountingFactorizer has several race conditions that make its results unreliable. A race condition occurs when the correctness of a computation depends on the relative timing or interleaving of multiple threads by the runtime; in other words, when getting the right answer relies on lucky timing. [4] The most common type of race condition is check-then-act, where a potentially stale observation is used to make a decision on what to do next.
 
@@ -40,7 +40,7 @@ The problem with the ¡°I¡¯ll just nip up the street and see if he¡¯s at the othe
 
 The Starbucks example illustrates a race condition because reaching the desired outcome (meeting your friend) depends on the relative timing of events (when each of you arrives at one Starbucks or the other, how long you wait there before switching, etc). The observation that he is not at Starbucks A becomes potentially invalid as soon as you walk out the front door; he could have come in through the back door and you wouldn¡¯t know. It is this invalidation of observations that characterizes most race conditions¡ªusing a potentially stale observation to make a decision or perform a computation. This type of race condition is called check-then-act: you observe something to be true (file X doesn¡¯t exist) and then take action based on that observation (create X); but in fact the observation could have become invalid between the time you observed it and the time you acted on it (someone else created X in the meantime), causing a problem (unexpected exception, overwritten data, file corruption).
 
-2.2.2. Example: Race Conditions in Lazy Initialization
+### 2.2.2. Example: Race Conditions in Lazy Initialization
 
 A common idiom that uses check-then-act is lazy initialization. The goal of lazy initialization is to defer initializing an object until it is actually needed while at the same time ensuring that it is initialized only once. LazyInitRace in Listing 2.3 illustrates the lazy initialization idiom. The getInstance method first checks whether the ExpensiveObject has already been initialized, in which case it returns the existing instance; otherwise it creates a new instance and returns it after retaining a reference to it so that future invocations can avoid the more expensive code path.
 
@@ -64,7 +64,7 @@ The hit-counting operation in UnsafeCountingFactorizer has another sort of race 
 
 Like most concurrency errors, race conditions don¡¯t always result in failure: some unlucky timing is also required. But race conditions can cause serious problems. If LazyInitRace is used to instantiate an application-wide registry, having it return different instances from multiple invocations could cause registrations to be lost or multiple activities to have inconsistent views of the set of registered objects. If UnsafeSequence is used to generate entity identifiers in a persistence framework, two distinct objects could end up with the same ID, violating identity integrity constraints.
 
-2.2.3. Compound Actions
+### 2.2.3. Compound Actions
 
 Both LazyInitRace and UnsafeCountingFactorizer contained a sequence of operations that needed to be atomic, or indivisible, relative to other operations on the same state. To avoid race conditions, there must be a way to prevent other threads from using a variable while we¡¯re in the middle of modifying it, so we can ensure that other threads can observe or modify the state only before we start or after we finish, but not in the middle.
 

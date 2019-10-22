@@ -1,4 +1,4 @@
-9.2. Short-running GUI Tasks
+## 9.2. Short-running GUI Tasks
 
 In a GUI application, events originate in the event thread and bubble up to application-provided listeners, which will probably perform some computation that affects the presentation objects. For simple, short-running tasks, the entire action can stay in the event thread; for longer-running tasks, some of the processing should be offloaded to another thread.
 

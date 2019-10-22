@@ -1,4 +1,4 @@
-9.3. Long-running GUI Tasks
+## 9.3. Long-running GUI Tasks
 
 If all tasks were short-running (and the application had no significant non-GUI portion), then the entire application could run within the event thread and you wouldn¡¯t have to pay any attention to threads at all. However, sophisticated GUI applications may execute tasks that may take longer than the user is willing to wait, such as spell checking, background compilation, or fetching remote resources. These tasks must run in another thread so that the GUI remains responsive while they run.
 
@@ -46,7 +46,7 @@ button.addActionListener(new ActionListener() {
 
 The task triggered when the button is pressed is composed of three sequential subtasks whose execution alternates between the event thread and the background thread. The first subtask updates the user interface to show that a longrunning operation has begun and starts the second subtask in a background thread. Upon completion, the second subtask queues the third subtask to run again in the event thread, which updates the user interface to reflect that the operation has completed. This sort of ¡°thread hopping¡± is typical of handling long-running tasks in GUI applications.
 
-9.3.1. Cancellation
+### 9.3.1. Cancellation
 
 Any task that takes long enough to run in another thread probably also takes long enough that the user might want to cancel it. You could implement cancellation directly using thread interruption, but it is much easier to use Future, which was designed to manage cancellable tasks.
 
@@ -85,7 +85,7 @@ cancelButton.addActionListener(new ActionListener() {
 
 Because runningTask is confined to the event thread, no synchronization is required when setting or checking it, and the start button listener ensures that only one background task is running at a time. However, it would be better to be notified when the task completes so that, for example, the cancel button could be disabled. We address this in the next section.
 
-9.3.2. Progress and Completion Indication
+### 9.3.2. Progress and Completion Indication
 
 Using a Future to represent a long-running task greatly simplified implementing cancellation. FutureTask also has a done hook that similarly facilitates completion notification. After the background Callable completes, done is called. By having done trigger a completion task in the event thread, we can construct a BackgroundTask class providing an onCompletion hook that is called in the event thread, as shown in Listing 9.7.
 
@@ -95,7 +95,7 @@ To implement a BackgroundTask you need only implement compute, which is called i
 
 Basing BackgroundTask on FutureTask also simplifies cancellation. Rather than having to poll the thread¡¯s interrupted status, compute can call Future. is-Cancelled. Listing 9.8 recasts the example from Listing 9.6 using Background-Task.
 
-9.3.3. SwingWorker
+### 9.3.3. SwingWorker
 
 We¡¯ve built a simple framework using FutureTask and Executor to execute longrunning tasks in background threads without undermining the responsiveness of the GUI. These techniques can be applied to any single-threaded GUI framework, not just Swing. In Swing, many of the features developed here are provided by the SwingWorker class, including cancellation, completion notification, and progress indication. Various versions of SwingWorker have been published in The Swing Connection and The Java Tutorial, and an updated version is included in Java 6.
 

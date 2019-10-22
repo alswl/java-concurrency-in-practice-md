@@ -1,4 +1,4 @@
-8.5. Parallelizing Recursive Algorithms
+## 8.5. Parallelizing Recursive Algorithms
 
 The page rendering examples in Section 6.3 went through a series of refinements in search of exploitable parallelism. The first attempt was entirely sequential; the second used two threads but still performed all the image downloads sequentially; the final version treated each image download as a separate task to achieve greater parallelism. Loops whose bodies contain nontrivial computation or perform potentially blocking I/O are frequently good candidates for parallelization, as long as the iterations are independent.
 
@@ -62,7 +62,7 @@ public<T> Collection<T> getParallelResults(List<Node<T>> nodes)
     return resultQueue;
 }
 
-8.5.1. Example: A Puzzle Framework
+### 8.5.1. Example: A Puzzle Framework
 
 An appealing application of this technique is solving puzzles that involve finding a sequence of transformations from some initial state to reach a goal state, such as the familiar ¡°sliding block puzzles¡±,[7] ¡°Hi-Q¡±, ¡°Instant Insanity¡±, and other solitaire puzzles.
 

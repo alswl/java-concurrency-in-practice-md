@@ -1,4 +1,4 @@
-7.3. Handling Abnormal Thread Termination
+## 7.3. Handling Abnormal Thread Termination
 
 It is obvious when a single-threaded console application terminates due to an uncaught exception¡ªthe program stops running and produces a stack trace that is very different from typical program output. Failure of a thread in a concurrent application is not always so obvious. The stack trace may be printed on the console, but no one may be watching the console. Also, when a thread fails, the application may appear to continue to work, so its failure could go unnoticed. Fortunately, there are means of both detecting and preventing threads from ¡°leaking¡± from an application.
 
@@ -28,7 +28,7 @@ public void run() {
     }
 }
 
-7.3.1. Uncaught Exception Handlers
+### 7.3.1. Uncaught Exception Handlers
 
 The previous section offered a proactive approach to the problem of unchecked exceptions. The Thread API also provides the UncaughtExceptionHandler facility, which lets you detect when a thread dies due to an uncaught exception. The two approaches are complementary: taken together, they provide defense-indepth against thread leakage.
 

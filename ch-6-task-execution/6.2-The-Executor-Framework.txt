@@ -1,4 +1,4 @@
-6.2. The Executor Framework
+## 6.2. The Executor Framework
 
 Tasks are logical units of work, and threads are a mechanism by which tasks can run asynchronously. We¡¯ve examined two policies for executing tasks using threads¡ªexecute tasks sequentially in a single thread, and execute each task in its own thread. Both have serious limitations: the sequential approach suffers from poor responsiveness and throughput, and the thread-per-task approach suffers from poor resource management.
 
@@ -14,7 +14,7 @@ Executor may be a simple interface, but it forms the basis for a flexible and po
 
 Executor is based on the producer-consumer pattern, where activities that submit tasks are the producers (producing units of work to be done) and the threads that execute tasks are the consumers (consuming those units of work). Using an Executor is usually the easiest path to implementing a producer-consumer design in your application.
 
-6.2.1. Example: Web Server Using Executor
+### 6.2.1. Example: Web Server Using Executor
 
 Building a web server with an Executor is easy. TaskExecutionWebServer in Listing 6.4 replaces the hard-coded thread creation with an Executor. In this case, we use one of the standard Executor implementations, a fixed-size thread pool with 100 threads.
 
@@ -53,7 +53,7 @@ public class ThreadPerTaskExecutor implements Executor {
 
 Similarly, it is also easy to write an Executor that would make TaskExecutionWebServer behave like the single-threaded version, executing each task synchronously before returning from execute, as shown in WithinThreadExecutor in Listing 6.6.
 
-6.2.2. Execution Policies
+### 6.2.2. Execution Policies
 
 The value of decoupling submission from execution is that it lets you easily specify, and subsequently change without great difficulty, the execution policy for a given class of tasks. An execution policy specifies the ¡°what, where, when, and how¡± of task execution, including:
 
@@ -88,7 +88,7 @@ new Thread(runnable).start()
 and you think you might at some point want a more flexible execution policy, seriously consider replacing it with the use of an Executor.
 
 
-6.2.3. Thread Pools
+### 6.2.3. Thread Pools
 
 A thread pool, as its name suggests, manages a homogeneous pool of worker threads. A thread pool is tightly bound to a work queue holding tasks waiting to be executed. Worker threads have a simple life: request the next task from the work queue, execute it, and go back to waiting for another task.
 
@@ -114,7 +114,7 @@ Switching from a thread-per-task policy to a pool-based policy has a big effect 
 
 [5] While the server may not fail due to the creation of too many threads, if the task arrival rate exceeds the task service rate for long enough it is still possible (just harder) to run out of memory because of the growing queue of Runnables awaiting execution. This can be addressed within the Executor framework by using a bounded work queue¡ªsee Section 8.3.2.
 
-6.2.4. Executor Lifecycle
+### 6.2.4. Executor Lifecycle
 
 We¡¯ve seen how to create an Executor but not how to shut one down. An Executor implementation is likely to create threads for processing tasks. But the JVM can¡¯t exit until all the (nondaemon) threads have terminated, so failing to shut down an Executor could prevent the JVM from exiting.
 
@@ -175,7 +175,7 @@ class LifecycleWebServer {
 
 					  
 
-6.2.5. Delayed and Periodic Tasks
+### 6.2.5. Delayed and Periodic Tasks
 
 The Timer facility manages the execution of deferred (¡°run this task in 100 ms¡±) and periodic (¡°run this task every 10 ms¡±) tasks. However, Timer has some drawbacks, and ScheduledThreadPoolExecutor should be thought of as its replacement.[6] You can construct a ScheduledThreadPoolExecutor through its constructor or through the newScheduledThreadPool factory.
 

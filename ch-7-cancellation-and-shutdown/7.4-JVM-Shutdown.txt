@@ -1,8 +1,8 @@
-7.4. JVM Shutdown
+## 7.4. JVM Shutdown
 
 The JVM can shut down in either an orderly or abrupt manner. An orderly shutdown is initiated when the last ¡°normal¡± (nondaemon) thread terminates, someone calls System.exit, or by other platform-specific means (such as sending a SIGINT or hitting Ctrl-C). While this is the standard and preferred way for the JVM to shut down, it can also be shut down abruptly by calling Runtime.halt or by killing the JVM process through the operating system (such as sending a SIGKILL).
 
-7.4.1. Shutdown Hooks
+### 7.4.1. Shutdown Hooks
 
 In an orderly shutdown, the JVM first starts all registered shutdown hooks. Shutdown hooks are unstarted threads that are registered with Runtime.addShutdownHook. The JVM makes no guarantees on the order in which shutdown hooks are started. If any application threads (daemon or nondaemon) are still running at shutdown time, they continue to run concurrently with the shutdown process. When all shutdown hooks have completed, the JVM may choose to run finalizers if runFinalizersOnExit is true, and then halts. The JVM makes no attempt to stop or interrupt any application threads that are still running at shutdown time; they are abruptly terminated when the JVM eventually halts. If the shutdown hooks or finalizers don¡¯t complete, then the orderly shutdown process ¡°hangs¡± and the JVM must be shut down abruptly. In an abrupt shutdown, the JVM is not required to do anything other than halt the JVM; shutdown hooks will not run.
 
@@ -23,7 +23,7 @@ public void start() {
     });
 }
 
-7.4.2. Daemon Threads
+### 7.4.2. Daemon Threads
 
 Sometimes you want to create a thread that performs some helper function but you don¡¯t want the existence of this thread to prevent the JVM from shutting down. This is what daemon threads are for.
 
@@ -36,7 +36,7 @@ Daemon threads should be used sparingly¡ªfew processing activities can be safely
 Daemon threads are not a good substitute for properly managing the lifecycle of services within an application.
 
 
-7.4.3. Finalizers
+### 7.4.3. Finalizers
 
 The garbage collector does a good job of reclaiming memory resources when they are no longer needed, but some resources, such as file or socket handles, must be explicitly returned to the operating system when no longer needed. To assist in this, the garbage collector treats objects that have a nontrivial finalize method specially: after they are reclaimed by the collector, finalize is called so that persistent resources can be released.
 

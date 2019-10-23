@@ -1,8 +1,8 @@
 Summary of Part I
 
-We°Øve covered a lot of material so far! The following °∞concurrency cheat sheet°± summarizes the main concepts and rules presented in Part I.
+We‚Äôve covered a lot of material so far! The following ‚Äúconcurrency cheat sheet‚Äù summarizes the main concepts and rules presented in Part I.
 
-It°Øs the mutable state, stupid. [1]
+It‚Äôs the mutable state, stupid. [1]
 
 All concurrency issues boil down to coordinating access to mutable state. The less mutable state, the easier it is to ensure thread safety.
 
@@ -24,12 +24,12 @@ Hold locks for the duration of compound actions.
 
 A program that accesses a mutable variable from multiple threads without synchronization is a broken program.
 
-Don°Øt rely on clever reasoning about why you don°Øt need to synchronize.
+Don‚Äôt rely on clever reasoning about why you don‚Äôt need to synchronize.
 
-Include thread safety in the design process°™or explicitly document that your class is not thread-safe.
+Include thread safety in the design process‚Äîor explicitly document that your class is not thread-safe.
 
 Document your synchronization policy.
 
 
-[1] During the 1992 U.S. presidential election, electoral strategist James Carville hung a sign in Bill Clinton°Øs campaign headquarters reading °∞The economy, stupid°±, to keep the campaign on message.
+[1] During the 1992 U.S. presidential election, electoral strategist James Carville hung a sign in Bill Clinton‚Äôs campaign headquarters reading ‚ÄúThe economy, stupid‚Äù, to keep the campaign on message.
 
